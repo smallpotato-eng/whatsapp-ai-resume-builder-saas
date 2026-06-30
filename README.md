@@ -21,17 +21,17 @@ This project demonstrates how an LLM-powered chatbot can be turned into a struct
 
 ```mermaid
 flowchart LR
-    A[WhatsApp User] --> B[Baileys WhatsApp Bridge]
-    B --> C[n8n State Machine Workflow]
-    C --> D[Flask API]
-    D --> E[SQLite Database]
-    C --> F[Gemini / Groq LLM]
+    A["WhatsApp User"] --> B["Baileys WhatsApp Bridge"]
+    B --> C["n8n State Machine Workflow"]
+    C --> D["Flask API"]
+    D --> E["SQLite Database"]
+    C --> F["Gemini / Groq LLM"]
     F --> C
-    C --> G[Template Preview Generator]
-    C --> H[Order & Payment Flow]
-    H --> I[Telegram Admin Alert]
+    C --> G["Template Preview Generator"]
+    C --> H["Order and Payment Flow"]
+    H --> I["Telegram Admin Alert"]
     C --> B
-    B --> J[User Receives Reply / Preview / Instructions]
+    B --> J["User Receives Reply, Preview, or Instructions"]
     
 What I Built
 WhatsApp integration using Baileys and Express.js
