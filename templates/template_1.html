@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Georgia', serif; font-size:11px; color:#1a1a1a; background:#fff; width:794px; min-height:1123px; }
+  .header { background:#1a3a5c; color:#fff; padding:36px 48px 28px; }
+  .header h1 { font-size:28px; letter-spacing:3px; text-transform:uppercase; font-weight:normal; margin-bottom:4px; }
+  .header h2 { font-size:13px; color:#a8c4e0; letter-spacing:2px; font-weight:normal; margin-bottom:16px; }
+  .contact-row { display:flex; gap:24px; font-size:10px; color:#c8dff0; }
+  .contact-row span::before { content:'• '; }
+  .body { padding:32px 48px; }
+  .section { margin-bottom:24px; }
+  .section-title { font-size:11px; letter-spacing:3px; text-transform:uppercase; color:#1a3a5c; border-bottom:2px solid #1a3a5c; padding-bottom:4px; margin-bottom:14px; }
+  .summary { font-size:11px; line-height:1.7; color:#444; }
+  .job { margin-bottom:14px; }
+  .job-header { display:flex; justify-content:space-between; align-items:baseline; }
+  .job-title { font-weight:bold; font-size:12px; }
+  .job-date { font-size:10px; color:#666; }
+  .job-company { color:#1a3a5c; font-size:11px; margin-bottom:5px; }
+  .job ul { padding-left:16px; }
+  .job ul li { margin-bottom:3px; line-height:1.5; color:#333; }
+  .edu-item { display:flex; justify-content:space-between; margin-bottom:8px; }
+  .edu-left .degree { font-weight:bold; font-size:12px; }
+  .edu-left .school { color:#1a3a5c; font-size:11px; }
+  .edu-right { text-align:right; font-size:10px; color:#666; }
+  .skills-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+  .skill-item { background:#f0f5fa; padding:5px 10px; font-size:10px; color:#1a3a5c; border-left:3px solid #1a3a5c; }
+</style>
+</head>
+<body>
+  <div class="header">
+    <h1>Ahmad bin Ali</h1>
+    <h2>Senior Software Engineer</h2>
+    <div class="contact-row">
+      <span>ahmad.ali@email.com</span>
+      <span>+60 12-345 6789</span>
+      <span>Kuala Lumpur, Malaysia</span>
+      <span>linkedin.com/in/ahmadali</span>
+    </div>
+  </div>
+  <div class="body">
+    <div class="section">
+      <div class="section-title">Professional Summary</div>
+      <div class="summary">Results-driven Software Engineer with 6 years of experience designing and implementing scalable web applications. Proven track record of leading cross-functional teams and delivering high-impact solutions in agile environments.</div>
+    </div>
+    <div class="section">
+      <div class="section-title">Work Experience</div>
+      <div class="job">
+        <div class="job-header"><span class="job-title">Senior Software Engineer</span><span class="job-date">Jan 2021 – Present</span></div>
+        <div class="job-company">Tech Solutions Sdn Bhd, Kuala Lumpur</div>
+        <ul>
+          <li>Led development of microservices architecture serving 500,000+ daily users</li>
+          <li>Reduced system latency by 40% through database query optimisation</li>
+          <li>Mentored team of 5 junior developers, improving sprint velocity by 25%</li>
+        </ul>
+      </div>
+      <div class="job">
+        <div class="job-header"><span class="job-title">Software Engineer</span><span class="job-date">Jun 2018 – Dec 2020</span></div>
+        <div class="job-company">Digital Agency Malaysia, Petaling Jaya</div>
+        <ul>
+          <li>Developed RESTful APIs for 12 client projects using Node.js and Python</li>
+          <li>Implemented CI/CD pipeline reducing deployment time from 2 hours to 15 minutes</li>
+        </ul>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Education</div>
+      <div class="edu-item">
+        <div class="edu-left">
+          <div class="degree">Bachelor of Computer Science (Honours)</div>
+          <div class="school">Universiti Malaya</div>
+        </div>
+        <div class="edu-right"><div>2014 – 2018</div><div>CGPA: 3.72 / 4.00</div></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Core Skills</div>
+      <div class="skills-grid">
+        <div class="skill-item">Python / Django / FastAPI</div>
+        <div class="skill-item">JavaScript / React / Node.js</div>
+        <div class="skill-item">AWS / Docker / Kubernetes</div>
+        <div class="skill-item">PostgreSQL / MongoDB / Redis</div>
+        <div class="skill-item">Agile / Scrum Methodology</div>
+        <div class="skill-item">System Architecture Design</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

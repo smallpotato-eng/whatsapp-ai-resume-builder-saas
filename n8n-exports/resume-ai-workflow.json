@@ -1,0 +1,657 @@
+{
+  "name": "Resume-AI v2",
+  "nodes": [
+    {
+      "id": "node-webhook",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        300
+      ],
+      "parameters": {
+        "path": "whatsapp",
+        "httpMethod": "POST",
+        "responseMode": "responseNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "node-extract",
+      "name": "Extract Message",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        200,
+        300
+      ],
+      "parameters": {
+        "jsCode": "\nconst body = $input.first().json?.body || $input.first().json;\nconst msg  = body?.data?.message || body?.message || body || {};\nconst phone = (msg?.key?.remoteJid || body?.phone || '').replace('@s.whatsapp.net','');\nconst text  = msg?.message?.conversation || msg?.message?.extendedTextMessage?.text || msg?.text || body?.text || '';\nconst type  = msg?.message?.imageMessage ? 'image' : msg?.message?.documentMessage ? 'document' : 'text';\nconst name  = msg?.pushName || body?.name || phone;\nreturn [{ json:{ phone, text, type, name } }];\n"
+      }
+    },
+    {
+      "id": "node-isreset",
+      "name": "Is Reset",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {},
+          "conditions": [
+            {
+              "leftValue": "={{ $json.text }}",
+              "rightValue": "/start",
+              "operator": {
+                "type": "string",
+                "operation": "startsWith"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      }
+    },
+    {
+      "id": "node-deletesession",
+      "name": "Delete Session",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        600,
+        120
+      ],
+      "parameters": {
+        "method": "DELETE",
+        "url": "=http://127.0.0.1:5051/session/{{ $('Extract Message').item.json.phone }}",
+        "options": {}
+      }
+    },
+    {
+      "id": "node-sendlangmenu",
+      "name": "Send Lang Menu",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        800,
+        120
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:3001/send",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({ phone: $('Extract Message').item.json.phone, text: 'Hi! I\\'m Ava 👋\\n\\nPlease choose your language:\\n\\n1️⃣ Bahasa Malaysia\\n2️⃣ English\\n3️⃣ 中文' }) }}",
+        "options": {}
+      }
+    },
+    {
+      "id": "node-getsession",
+      "name": "Get Session",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        600,
+        300
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "=http://127.0.0.1:5051/session/{{ $('Extract Message').item.json.phone }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json",
+              "fullResponse": false
+            }
+          }
+        },
+        "onError": "continueErrorOutput"
+      }
+    },
+    {
+      "id": "node-isnewuser",
+      "name": "Is New User",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        800,
+        300
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {},
+          "conditions": [
+            {
+              "leftValue": "={{ Object.keys($json).length }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      }
+    },
+    {
+      "id": "node-createsession",
+      "name": "Create Session",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1000,
+        480
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:5051/session",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({ phone_number: $('Extract Message').item.json.phone }) }}",
+        "options": {}
+      }
+    },
+    {
+      "id": "node-masterswitch",
+      "name": "Master Switch",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        1000,
+        300
+      ],
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {},
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Get Session').item.json?.current_step || 'new' }}",
+                    "rightValue": "new",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "new"
+            },
+            {
+              "conditions": {
+                "options": {},
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Get Session').item.json?.current_step || 'new' }}",
+                    "rightValue": "pdpa",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "pdpa"
+            },
+            {
+              "conditions": {
+                "options": {},
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Get Session').item.json?.current_step || 'new' }}",
+                    "rightValue": "service_select",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "service"
+            },
+            {
+              "conditions": {
+                "options": {},
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Get Session').item.json?.current_step || 'new' }}",
+                    "rightValue": "template_select",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "template"
+            },
+            {
+              "conditions": {
+                "options": {},
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Get Session').item.json?.current_step || 'new' }}",
+                    "rightValue": "collecting",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "collecting"
+            },
+            {
+              "conditions": {
+                "options": {},
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Get Session').item.json?.current_step || 'new' }}",
+                    "rightValue": "payment_pending",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "payment"
+            },
+            {
+              "conditions": {
+                "options": {},
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Get Session').item.json?.current_step || 'new' }}",
+                    "rightValue": "feedback",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "feedback"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "none"
+        }
+      }
+    },
+    {
+      "id": "node-handlenew",
+      "name": "Handle New",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1280,
+        60
+      ],
+      "parameters": {
+        "jsCode": "// Step: new\n// Task: Show language menu. If user picks 1/2/3, save language, send PDPA, advance to pdpa.\nconst phone = $('Extract Message').item.json.phone;\nconst text  = ($('Extract Message').item.json.text || '').trim();\n\nconst FLASK   = 'http://127.0.0.1:5051';\nconst BAILEYS = 'http://127.0.0.1:3001';\n\nasync function send(msg)   { await this.helpers.httpRequest({ method:'POST', url:`${BAILEYS}/send`,         headers:{'Content-Type':'application/json'}, body:JSON.stringify({phone, text:msg}), returnFullResponse:false }); }\nasync function saveMsg(role, content) { await this.helpers.httpRequest({ method:'POST', url:`${FLASK}/conversations`, headers:{'Content-Type':'application/json'}, body:JSON.stringify({phone_number:phone, role, content}), returnFullResponse:false }); }\nasync function setStep(step, extra={}) { await this.helpers.httpRequest({ method:'POST', url:`${FLASK}/session/${phone}/step`, headers:{'Content-Type':'application/json'}, body:JSON.stringify({current_step:step, ...extra}), returnFullResponse:false }); }\n\nconst LANG_MENU = 'Hi! I\\'m Ava 👋 Saya Ava!\\n\\nPlease choose your language / Sila pilih bahasa anda:\\n\\n1️⃣ Bahasa Malaysia\\n2️⃣ English\\n3️⃣ 中文';\n\nconst PDPA = {\n  BM: 'Sebelum kita mulakan, sila ambil perhatian 📋\\n\\nAva Resume Studio mengumpul maklumat peribadi anda (nama, pendidikan, pengalaman kerja, kemahiran) semata-mata untuk tujuan penghasilan résumé. Maklumat anda tidak akan dikongsi dengan pihak ketiga.\\n\\n• Anda bertanggungjawab atas ketepatan maklumat yang diberikan.\\n• Perkhidmatan kami tidak menjamin peluang pekerjaan.\\n• Bayaran balik tidak tersedia setelah résumé dihantar.\\n\\nBalas \"Setuju\" untuk meneruskan. 😊',\n  EN: 'Before we begin, please note 📋\\n\\nAva Resume Studio collects your personal information (name, education, work history, skills) solely for the purpose of creating your resume. Your data will not be shared with third parties.\\n\\n• You are responsible for the accuracy of information provided.\\n• Our service does not guarantee employment outcomes.\\n• Refunds are not available once the resume has been delivered.\\n\\nReply \"Agree\" to proceed. 😊',\n  CN: '開始之前，請注意 📋\\n\\nAva Resume Studio 收集您的個人資料（姓名、學歷、工作經歷、技能），僅用於製作履歷。您的資料不會與第三方共享。\\n\\n• 您對所提供資料的準確性負責。\\n• 本服務不保證求職結果。\\n• 履歷交付後不提供退款。\\n\\n回覆「同意」即表示您接受以上條款。😊'\n};\n\nconst langMap = { '1':'BM', '2':'EN', '3':'CN' };\nconst choice = langMap[text];\n\nif (choice) {\n  await setStep('pdpa', { chosen_language: choice });\n  await saveMsg('user', text);\n  await saveMsg('assistant', PDPA[choice]);\n  await send(PDPA[choice]);\n} else {\n  await send(LANG_MENU);\n}\n\nreturn [{ json: { ok: true } }];\n"
+      }
+    },
+    {
+      "id": "node-handlepdpa",
+      "name": "Handle PDPA",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1280,
+        160
+      ],
+      "parameters": {
+        "jsCode": "// Step: pdpa\n// Task: Wait for agree. If agreed, show service menu, advance to service_select.\nconst phone = $('Extract Message').item.json.phone;\nconst text  = ($('Extract Message').item.json.text || '').trim();\nconst lang  = $('Get Session').item.json?.chosen_language || 'EN';\n\nconst FLASK   = 'http://127.0.0.1:5051';\nconst BAILEYS = 'http://127.0.0.1:3001';\n\nasync function send(msg)   { await this.helpers.httpRequest({ method:'POST', url:`${BAILEYS}/send`,         headers:{'Content-Type':'application/json'}, body:JSON.stringify({phone, text:msg}), returnFullResponse:false }); }\nasync function saveMsg(role, content) { await this.helpers.httpRequest({ method:'POST', url:`${FLASK}/conversations`, headers:{'Content-Type':'application/json'}, body:JSON.stringify({phone_number:phone, role, content}), returnFullResponse:false }); }\nasync function setStep(step) { await this.helpers.httpRequest({ method:'POST', url:`${FLASK}/session/${phone}/step`, headers:{'Content-Type':'application/json'}, body:JSON.stringify({current_step:step}), returnFullResponse:false }); }\n\nconst isAgreed = /^(agree|setuju|同意|ok|yes|ya|是|對|好)$/i.test(text);\n\nconst SERVICE_MENU = {\n  BM: 'Terima kasih! 😊\\n\\nSila pilih perkhidmatan:\\n\\n1️⃣ Tulis Resume dari Awal — RM7\\n2️⃣ Perbaiki Resume Sedia Ada — RM5\\n3️⃣ Pengoptimuman ATS — RM5\\n4️⃣ Surat Lamaran — RM3\\n5️⃣ Pakej Penuh (Resume + Surat Lamaran) — RM10\\n\\nBalas nombor pilihan anda.',\n  EN: 'Thank you! 😊\\n\\nPlease choose a service:\\n\\n1️⃣ Write Resume from Scratch — RM7\\n2️⃣ Improve Existing Resume — RM5\\n3️⃣ ATS Optimisation — RM5\\n4️⃣ Cover Letter — RM3\\n5️⃣ Full Package (Resume + Cover Letter) — RM10\\n\\nReply with the number of your choice.',\n  CN: '感謝您的同意！😊\\n\\n請選擇服務：\\n\\n1️⃣ 從頭撰寫履歷 — RM7\\n2️⃣ 改善現有履歷 — RM5\\n3️⃣ ATS 優化 — RM5\\n4️⃣ 求職信 — RM3\\n5️⃣ 全套（履歷 + 求職信）— RM10\\n\\n請回覆號碼。'\n};\n\nconst REMINDER = {\n  BM: 'Sila balas \"Setuju\" untuk meneruskan. 😊',\n  EN: 'Please reply \"Agree\" to proceed. 😊',\n  CN: '請回覆「同意」以繼續。😊'\n};\n\nawait saveMsg('user', text);\n\nif (isAgreed) {\n  await setStep('service_select');\n  await saveMsg('assistant', SERVICE_MENU[lang]);\n  await send(SERVICE_MENU[lang]);\n} else {\n  await saveMsg('assistant', REMINDER[lang]);\n  await send(REMINDER[lang]);\n}\n\nreturn [{ json: { ok: true } }];\n"
+      }
+    },
+    {
+      "id": "node-handleservice",
+      "name": "Handle Service",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1280,
+        260
+      ],
+      "parameters": {
+        "jsCode": "// Step: service_select\n// Task: User picks 1-5. Store service, advance to template_layout, send layout image.\nconst phone = $('Extract Message').item.json.phone;\nconst text  = ($('Extract Message').item.json.text || '').trim();\nconst lang  = $('Get Session').item.json?.chosen_language || 'EN';\n\nconst FLASK   = 'http://127.0.0.1:5051';\nconst BAILEYS = 'http://127.0.0.1:3001';\n\nasync function send(msg)   { await this.helpers.httpRequest({ method:'POST', url:`${BAILEYS}/send`,         headers:{'Content-Type':'application/json'}, body:JSON.stringify({phone, text:msg}), returnFullResponse:false }); }\nasync function sendImg(imagePath) { await this.helpers.httpRequest({ method:'POST', url:`${BAILEYS}/send-image`, headers:{'Content-Type':'application/json'}, body:JSON.stringify({phone, imagePath}), returnFullResponse:false }); }\nasync function saveMsg(role, content) { await this.helpers.httpRequest({ method:'POST', url:`${FLASK}/conversations`, headers:{'Content-Type':'application/json'}, body:JSON.stringify({phone_number:phone, role, content}), returnFullResponse:false }); }\nasync function setStep(step) { await this.helpers.httpRequest({ method:'POST', url:`${FLASK}/session/${phone}/step`, headers:{'Content-Type':'application/json'}, body:JSON.stringify({current_step:step}), returnFullResponse:false }); }\nasync function saveData(data) { await this.helpers.httpRequest({ method:'POST', url:`${FLASK}/session/${phone}/data`, headers:{'Content-Type':'application/json'}, body:JSON.stringify(data), returnFullResponse:false }); }\n\nconst SERVICES = {\n  '1': { name_BM:'Tulis Resume dari Awal',      name_EN:'Write Resume from Scratch', name_CN:'從頭撰寫履歷', amount:7  },\n  '2': { name_BM:'Perbaiki Resume Sedia Ada',    name_EN:'Improve Existing Resume',   name_CN:'改善現有履歷', amount:5  },\n  '3': { name_BM:'Pengoptimuman ATS',             name_EN:'ATS Optimisation',          name_CN:'ATS 優化',    amount:5  },\n  '4': { name_BM:'Surat Lamaran',                 name_EN:'Cover Letter',              name_CN:'求職信',       amount:3  },\n  '5': { name_BM:'Pakej Penuh',                   name_EN:'Full Package',              name_CN:'全套',         amount:10 },\n};\n\nconst LAYOUT_ASK = {\n  BM: 'Pilihan hebat! 🎨\\n\\nSekarang sila pilih susun atur resume anda:\\n\\n*A* = Dua kolum (moden, padat)\\n*B* = Satu kolum (klasik, mudah dibaca)\\n\\nBalas A atau B.',\n  EN: 'Great choice! 🎨\\n\\nNow please choose your resume layout:\\n\\n*A* = Two-column (modern, compact)\\n*B* = Single-column (classic, easy to read)\\n\\nReply A or B.',\n  CN: '很好！🎨\\n\\n請選擇履歷版面：\\n\\n*A* = 雙欄（現代、緊湊）\\n*B* = 單欄（經典、易讀）\\n\\n回覆 A 或 B。'\n};\n\nconst RETRY = {\n  BM: 'Sila pilih nombor 1 hingga 5 untuk memilih perkhidmatan. 😊',\n  EN: 'Please reply with a number from 1 to 5 to choose a service. 😊',\n  CN: '請回覆 1 至 5 的數字選擇服務。😊'\n};\n\nconst choice = text.match(/^[1-5]$/)?.[0];\nawait saveMsg('user', text);\n\nif (choice) {\n  const svc = SERVICES[choice];\n  const svcName = svc[`name_${lang}`];\n  await saveData({ service: svcName, amount: svc.amount });\n  await setStep('template_layout');\n  await saveMsg('assistant', LAYOUT_ASK[lang]);\n  await send(LAYOUT_ASK[lang]);\n  await sendImg('${PROJECT_ROOT}/resume-ai/templates/layout_preview.png');\n} else {\n  await saveMsg('assistant', RETRY[lang]);\n  await send(RETRY[lang]);\n}\n\nreturn [{ json: { ok: true } }];\n"
+      }
+    },
+    {
+      "id": "node-handletemplate",
+      "name": "Handle Template",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1280,
+        360
+      ],
+      "parameters": {
+        "jsCode": "// Step: template_select\n// Show 6 template previews OR detect choice 1-6\nconst phone    = $('Extract Message').item.json.phone;\nconst text     = ($('Extract Message').item.json.text || '').trim();\nconst lang     = $('Get Session').item.json?.chosen_language || 'EN';\nconst session  = $('Get Session').item.json || {};\nconst existing = session.collected_data || {};\n\nconst FLASK   = 'http://127.0.0.1:5051';\nconst BAILEYS = 'http://127.0.0.1:3001';\nconst TPL_DIR = '${PROJECT_ROOT}/resume-ai/templates';\n\nasync function send(msg) { await this.helpers.httpRequest({ method:'POST', url:`${BAILEYS}/send`, headers:{'Content-Type':'application/json'}, body:JSON.stringify({phone, text:msg}), returnFullResponse:false }); }\nasync function sendImg(imagePath, caption) {\n  try { await this.helpers.httpRequest({ method:'POST', url:`${BAILEYS}/send-image`, headers:{'Content-Type':'application/json'}, body:JSON.stringify({phone, imagePath, caption}), returnFullResponse:false }); }\n  catch(e) { console.log('sendImg failed:', e.message); }\n}\nasync function saveMsg(role, content) { await this.helpers.httpRequest({ method:'POST', url:`${FLASK}/conversations`, headers:{'Content-Type':'application/json'}, body:JSON.stringify({phone_number:phone, role, content}), returnFullResponse:false }); }\nasync function setStep(step) { await this.helpers.httpRequest({ method:'POST', url:`${FLASK}/session/${phone}/step`, headers:{'Content-Type':'application/json'}, body:JSON.stringify({current_step:step}), returnFullResponse:false }); }\nasync function saveData(data) { await this.helpers.httpRequest({ method:'POST', url:`${FLASK}/session/${phone}/data`, headers:{'Content-Type':'application/json'}, body:JSON.stringify(data), returnFullResponse:false }); }\n\nconst TEMPLATE_NAMES = {\n  BM: ['Klasik','Moden','Minimal','Bold','Eksekutif','Fresh Grad'],\n  EN: ['Classic','Modern','Minimal','Bold','Executive','Fresh Grad'],\n  CN: ['經典','現代','簡約','大膽','高管','應屆生']\n};\n\n// Detect choice 1-6\nconst match = text.match(/\\b([1-6])\\b/);\nconst choice = match ? parseInt(match[1]) : null;\n\nawait saveMsg('user', text);\n\nif (!existing._templates_shown) {\n  // First time in this step — send all 6 previews\n  const INTRO = {\n    BM: '🎨 Pilih template resume anda!\\n\\nSila lihat 6 contoh di bawah dan balas dengan nombor pilihan anda (1-6):',\n    EN: '🎨 Choose your resume template!\\n\\nHere are 6 designs — reply with your choice (1-6):',\n    CN: '🎨 請選擇您的履歷模板！\\n\\n以下是 6 種設計——請回覆您的選擇（1-6）：'\n  };\n  await saveMsg('assistant', INTRO[lang]);\n  await send(INTRO[lang]);\n\n  // Send all 6 preview images\n  const names = TEMPLATE_NAMES[lang];\n  for (let i = 1; i <= 6; i++) {\n    await sendImg(`${TPL_DIR}/preview_${i}.png`, `*${i}. ${names[i-1]}*`);\n  }\n\n  await saveData({ _templates_shown: true });\n\n} else if (choice && choice >= 1 && choice <= 6) {\n  // User made a choice\n  const names = TEMPLATE_NAMES[lang];\n  await saveData({ template_choice: choice });\n  await setStep('collecting');\n\n  const CONFIRM = {\n    BM: `Template *${choice}. ${TEMPLATE_NAMES.BM[choice-1]}* dipilih ✅\\n\\n✏️ Sekarang sila berikan maklumat berikut:\\n\\n1️⃣ Nama penuh\\n2️⃣ Nombor telefon & emel\\n3️⃣ *Jawatan sasaran*\\n4️⃣ Pengalaman kerja (syarikat, jawatan, tahun, tugas utama)\\n5️⃣ Pendidikan (universiti, program, tahun, CGPA)\\n6️⃣ Kemahiran utama\\n\\nBoleh hantar semua sekali atau satu per satu 😊`,\n    EN: `Template *${choice}. ${TEMPLATE_NAMES.EN[choice-1]}* selected ✅\\n\\n✏️ Please provide the following information:\\n\\n1️⃣ Full name\\n2️⃣ Phone number & email\\n3️⃣ *Target job title*\\n4️⃣ Work experience (company, role, year, key duties)\\n5️⃣ Education (university, programme, year, CGPA)\\n6️⃣ Key skills\\n\\nYou can send everything at once or one by one 😊`,\n    CN: `已選模板 *${choice}. ${TEMPLATE_NAMES.CN[choice-1]}* ✅\\n\\n✏️ 請提供以下資料：\\n\\n1️⃣ 全名\\n2️⃣ 電話號碼和電郵\\n3️⃣ *目標職位*\\n4️⃣ 工作經歷（公司、職位、年份、主要職責）\\n5️⃣ 學歷（大學、科系、年份、GPA）\\n6️⃣ 主要技能\\n\\n可一次發送或逐項提供 😊`\n  };\n  await saveMsg('assistant', CONFIRM[lang]);\n  await send(CONFIRM[lang]);\n\n} else {\n  // Already shown but no valid choice yet\n  const RE_ASK = {\n    BM: 'Sila balas dengan nombor template pilihan anda (1-6) 😊',\n    EN: 'Please reply with your template choice (1-6) 😊',\n    CN: '請回覆您選擇的模板號碼（1-6）😊'\n  };\n  await saveMsg('assistant', RE_ASK[lang]);\n  await send(RE_ASK[lang]);\n}\n\nreturn [{ json: { ok: true } }];\n"
+      }
+    },
+    {
+      "id": "node-aicollecting",
+      "name": "AI Collecting",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1280,
+        460
+      ],
+      "parameters": {
+        "jsCode": "// Step: collecting\n// AI task: extract resume data, merge with existing. When complete, create order.\nconst phone   = $('Extract Message').item.json.phone;\nconst text    = ($('Extract Message').item.json.text || '').trim();\nconst lang    = $('Get Session').item.json?.chosen_language || 'EN';\nconst session = $('Get Session').item.json || {};\nconst existing = session.collected_data || {};\n\nconst FLASK   = 'http://127.0.0.1:5051';\nconst BAILEYS = 'http://127.0.0.1:3001';\nconst GEMINI_KEY = 'YOUR_GEMINI_API_KEY';\nconst GROQ_KEY   = 'YOUR_GROQ_API_KEY';\n\nasync function send(msg)   { await this.helpers.httpRequest({ method:'POST', url:`${BAILEYS}/send`,         headers:{'Content-Type':'application/json'}, body:JSON.stringify({phone, text:msg}), returnFullResponse:false }); }\nasync function saveMsg(role, content) { await this.helpers.httpRequest({ method:'POST', url:`${FLASK}/conversations`, headers:{'Content-Type':'application/json'}, body:JSON.stringify({phone_number:phone, role, content}), returnFullResponse:false }); }\nasync function setStep(step) { await this.helpers.httpRequest({ method:'POST', url:`${FLASK}/session/${phone}/step`, headers:{'Content-Type':'application/json'}, body:JSON.stringify({current_step:step}), returnFullResponse:false }); }\nasync function saveData(data) { return await this.helpers.httpRequest({ method:'POST', url:`${FLASK}/session/${phone}/data`, headers:{'Content-Type':'application/json'}, body:JSON.stringify(data), returnFullResponse:false }); }\n\nconst langName = { BM:'Bahasa Malaysia', EN:'English', CN:'Traditional Chinese' }[lang];\n\nconst systemPrompt = `You are Ava, a resume assistant collecting information to build a resume.\nReply language: ${langName}.\nPreviously collected data: ${JSON.stringify(existing)}\n\nExtract any NEW resume information from the user's message and merge with existing data.\nRequired fields: name, target_job, experience_years, education, work_history, skills.\nIf any required field is still missing after merging, gently ask for it.\nIf ALL fields are present, show a confirmation summary and ask user to confirm.\nThe user confirms with: yes/ok/confirm/betul/setuju/是/好/對.\n\nOutput ONLY valid JSON:\n{\n  \"reply\": \"your response in ${langName}\",\n  \"extracted_data\": { \"name\":\"...\", \"target_job\":\"...\", \"experience_years\":\"...\", \"education\":\"...\", \"work_history\":\"...\", \"skills\":\"...\" },\n  \"is_all_complete\": false,\n  \"user_confirmed\": false\n}\nSet is_all_complete=true only when ALL 6 fields are present.\nSet user_confirmed=true only when user explicitly confirmed a summary.`;\n\nconst messages = [\n  { role:'system', content: systemPrompt },\n  { role:'user',   content: text }\n];\n\nlet raw = '';\ntry {\n  const r = await this.helpers.httpRequest({ method:'POST', url:'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions', headers:{Authorization:`Bearer ${GEMINI_KEY}`,'Content-Type':'application/json'}, body:JSON.stringify({model:'gemini-2.0-flash',temperature:0.2,response_format:{type:'json_object'},messages}), returnFullResponse:false });\n  raw = r.choices?.[0]?.message?.content || '';\n} catch(e) {\n  try {\n    const r = await this.helpers.httpRequest({ method:'POST', url:'https://api.groq.com/openai/v1/chat/completions', headers:{Authorization:`Bearer ${GROQ_KEY}`,'Content-Type':'application/json'}, body:JSON.stringify({model:'llama-3.3-70b-versatile',temperature:0.2,response_format:{type:'json_object'},messages}), returnFullResponse:false });\n    raw = r.choices?.[0]?.message?.content || '';\n  } catch(e2) { raw = '{\"reply\":\"Please provide your information.\",\"extracted_data\":{},\"is_all_complete\":false,\"user_confirmed\":false}'; }\n}\n\nlet parsed = { reply:'Please provide your information.', extracted_data:{}, is_all_complete:false, user_confirmed:false };\ntry { parsed = JSON.parse(raw.match(/\\{[\\s\\S]*\\}/)?.[0] || raw); } catch(e) {}\n\nconst reply         = parsed.reply || 'Please provide your information.';\nconst extractedData = parsed.extracted_data || {};\nconst isComplete    = parsed.is_all_complete === true;\nconst confirmed     = parsed.user_confirmed === true;\n\n// Always save extracted data\nif (Object.keys(extractedData).length > 0) {\n  await saveData(extractedData);\n}\n\nawait saveMsg('user', text);\nawait saveMsg('assistant', reply);\nawait send(reply);\n\n// Only create order when complete AND confirmed\nif (isComplete && confirmed) {\n  const merged = { ...existing, ...extractedData };\n  const orderResp = await this.helpers.httpRequest({ method:'POST', url:`${FLASK}/orders`, headers:{'Content-Type':'application/json'},\n    body: JSON.stringify({\n      phone_number: phone,\n      customer_name: merged.name || '',\n      service: merged.service || 'Resume',\n      amount: merged.amount || 7,\n      details: { target_job: merged.target_job, layout: merged.layout, colour: merged.colour, style: merged.style }\n    }), returnFullResponse:false });\n\n  const ticket = orderResp.ticket_no || '';\n  await setStep('payment_pending');\n\n  const TICKET_MSG = {\n    BM: `Pesanan anda telah diterima! 🎉\\n\\nNombor Pesanan: *${ticket}*\\n\\nSila buat pembayaran:\\n🏦 Example Bank\\n💳 Akaun: 0000000000\\n👤 Nama: Example Account Name\\n💰 Jumlah: RM${merged.amount || 7}\\n\\nGunakan nombor pesanan sebagai rujukan. Hantar screenshot selepas bayar. 😊`,\n    EN: `Your order has been received! 🎉\\n\\nOrder Number: *${ticket}*\\n\\nPlease make payment:\\n🏦 Example Bank\\n💳 Account: 0000000000\\n👤 Name: Example Account Name\\n💰 Amount: RM${merged.amount || 7}\\n\\nUse the order number as reference. Send screenshot after payment. 😊`,\n    CN: `您的訂單已收到！🎉\\n\\n訂單號碼：*${ticket}*\\n\\n請完成付款：\\n🏦 Example Bank\\n💳 帳號：0000000000\\n👤 姓名：Example Account Name\\n💰 金額：RM${merged.amount || 7}\\n\\n請以訂單號碼作為付款備注。付款後發送截圖。😊`\n  };\n  await saveMsg('assistant', TICKET_MSG[lang]);\n  await send(TICKET_MSG[lang]);\n}\n\nreturn [{ json: { ok: true } }];\n"
+      }
+    },
+    {
+      "id": "node-handlepayment",
+      "name": "Handle Payment",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1280,
+        560
+      ],
+      "parameters": {
+        "jsCode": "// Step: payment_pending\n// Task: Detect payment proof (image or keywords). Notify Telegram, advance to feedback.\nconst phone   = $('Extract Message').item.json.phone;\nconst text    = ($('Extract Message').item.json.text || '').trim();\nconst msgType = $('Extract Message').item.json.type || 'text';\nconst lang    = $('Get Session').item.json?.chosen_language || 'EN';\nconst name    = $('Extract Message').item.json.name || phone;\n\nconst FLASK    = 'http://127.0.0.1:5051';\nconst BAILEYS  = 'http://127.0.0.1:3001';\nconst TG_TOKEN = 'YOUR_TELEGRAM_BOT_TOKEN';\nconst TELEGRAM_ADMIN_CHAT_ID = YOUR_TELEGRAM_ADMIN_CHAT_ID;\n\nasync function send(msg)   { await this.helpers.httpRequest({ method:'POST', url:`${BAILEYS}/send`,         headers:{'Content-Type':'application/json'}, body:JSON.stringify({phone, text:msg}), returnFullResponse:false }); }\nasync function saveMsg(role, content) { await this.helpers.httpRequest({ method:'POST', url:`${FLASK}/conversations`, headers:{'Content-Type':'application/json'}, body:JSON.stringify({phone_number:phone, role, content}), returnFullResponse:false }); }\nasync function setStep(step) { await this.helpers.httpRequest({ method:'POST', url:`${FLASK}/session/${phone}/step`, headers:{'Content-Type':'application/json'}, body:JSON.stringify({current_step:step}), returnFullResponse:false }); }\n\n// Detect payment proof: image attachment OR payment keywords\nconst isImage    = msgType === 'image' || msgType === 'document';\nconst hasKeyword = /paid|bayar|dah bayar|已付|transfer|slip|receipt|payment/i.test(text);\nconst isPaid     = isImage || hasKeyword;\n\nawait saveMsg('user', text || '[payment proof]');\n\nif (isPaid) {\n  // Notify Telegram\n  const tgMsg = `💰 Payment Received!\\n\\nFrom: ${phone}\\nName: ${name}\\n\\nPlease verify payment and deliver resume.`;\n  try {\n    await this.helpers.httpRequest({ method:'POST', url:`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, headers:{'Content-Type':'application/json'}, body:JSON.stringify({chat_id:TG_CHAT, text:tgMsg}), returnFullResponse:false });\n  } catch(e) { console.log('TG notify failed:', e.message); }\n\n  await setStep('feedback');\n\n  const THANKS = {\n    BM: 'Terima kasih! 🙏 Pembayaran anda sedang disahkan. Resume anda akan siap dalam 24 jam.\\n\\nSambil menunggu, boleh beri kami penilaian?\\n\\n⭐ Beri markah 1-5 untuk perkhidmatan kami.',\n    EN: 'Thank you! 🙏 Your payment is being verified. Your resume will be ready within 24 hours.\\n\\nWhile waiting, could you rate our service?\\n\\n⭐ Give us a rating from 1 to 5.',\n    CN: '謝謝！🙏 您的付款正在核實中。您的履歷將在 24 小時內完成。\\n\\n趁此機會，能給我們評分嗎？\\n\\n⭐ 請給我們 1 到 5 分的評價。'\n  };\n  await saveMsg('assistant', THANKS[lang]);\n  await send(THANKS[lang]);\n} else {\n  const REMIND = {\n    BM: 'Sila hantar bukti pembayaran (screenshot) setelah melakukan pembayaran. 😊',\n    EN: 'Please send your payment screenshot after completing the transfer. 😊',\n    CN: '請在完成匯款後，發送付款截圖。😊'\n  };\n  await saveMsg('assistant', REMIND[lang]);\n  await send(REMIND[lang]);\n}\n\nreturn [{ json: { ok: true } }];\n"
+      }
+    },
+    {
+      "id": "node-aifeedback",
+      "name": "AI Feedback",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1280,
+        660
+      ],
+      "parameters": {
+        "jsCode": "// Step: feedback\n// AI task: collect rating (1-5) and comment. Save, send farewell, set done.\nconst phone   = $('Extract Message').item.json.phone;\nconst text    = ($('Extract Message').item.json.text || '').trim();\nconst lang    = $('Get Session').item.json?.chosen_language || 'EN';\nconst session = $('Get Session').item.json || {};\n\nconst FLASK   = 'http://127.0.0.1:5051';\nconst BAILEYS = 'http://127.0.0.1:3001';\nconst GEMINI_KEY = 'YOUR_GEMINI_API_KEY';\nconst GROQ_KEY   = 'YOUR_GROQ_API_KEY';\n\nasync function send(msg)   { await this.helpers.httpRequest({ method:'POST', url:`${BAILEYS}/send`,         headers:{'Content-Type':'application/json'}, body:JSON.stringify({phone, text:msg}), returnFullResponse:false }); }\nasync function saveMsg(role, content) { await this.helpers.httpRequest({ method:'POST', url:`${FLASK}/conversations`, headers:{'Content-Type':'application/json'}, body:JSON.stringify({phone_number:phone, role, content}), returnFullResponse:false }); }\nasync function setStep(step) { await this.helpers.httpRequest({ method:'POST', url:`${FLASK}/session/${phone}/step`, headers:{'Content-Type':'application/json'}, body:JSON.stringify({current_step:step}), returnFullResponse:false }); }\n\nconst langName = { BM:'Bahasa Malaysia', EN:'English', CN:'Traditional Chinese' }[lang];\nconst existingData = session.collected_data || {};\n\nconst systemPrompt = `You are Ava. The customer just received their resume. Collect feedback.\nReply language: ${langName}.\nPreviously collected: rating=${existingData._feedback_rating || 'none'}, comment=${existingData._feedback_comment || 'none'}.\nStep 1: If no rating yet, extract a star rating (1-5) from the message.\nStep 2: If rating exists but no comment, ask for a short comment.\nStep 3: If both exist, thank them warmly and say goodbye.\nOutput ONLY valid JSON:\n{\"reply\":\"your response\",\"rating\":null or 1-5,\"comment\":null or \"string\",\"is_done\":false}\nSet is_done=true only when BOTH rating and comment are present.`;\n\nconst messages = [\n  { role:'system', content: systemPrompt },\n  { role:'user',   content: text }\n];\n\nlet raw = '';\ntry {\n  const r = await this.helpers.httpRequest({ method:'POST', url:'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions', headers:{Authorization:`Bearer ${GEMINI_KEY}`,'Content-Type':'application/json'}, body:JSON.stringify({model:'gemini-2.0-flash',temperature:0.2,response_format:{type:'json_object'},messages}), returnFullResponse:false });\n  raw = r.choices?.[0]?.message?.content || '';\n} catch(e) {\n  try {\n    const r = await this.helpers.httpRequest({ method:'POST', url:'https://api.groq.com/openai/v1/chat/completions', headers:{Authorization:`Bearer ${GROQ_KEY}`,'Content-Type':'application/json'}, body:JSON.stringify({model:'llama-3.3-70b-versatile',temperature:0.2,response_format:{type:'json_object'},messages}), returnFullResponse:false });\n    raw = r.choices?.[0]?.message?.content || '';\n  } catch(e2) { raw = '{\"reply\":\"Thank you for your feedback!\",\"rating\":null,\"comment\":null,\"is_done\":false}'; }\n}\n\nlet parsed = { reply:'Thank you!', rating:null, comment:null, is_done:false };\ntry { parsed = JSON.parse(raw.match(/\\{[\\s\\S]*\\}/)?.[0] || raw); } catch(e) {}\n\nconst reply  = parsed.reply || 'Thank you!';\nconst isDone = parsed.is_done === true;\n\nawait saveMsg('user', text);\nawait saveMsg('assistant', reply);\nawait send(reply);\n\n// Save partial feedback data\nconst feedbackUpdate = {};\nif (parsed.rating)  feedbackUpdate._feedback_rating  = parsed.rating;\nif (parsed.comment) feedbackUpdate._feedback_comment = parsed.comment;\nif (Object.keys(feedbackUpdate).length > 0) {\n  await this.helpers.httpRequest({ method:'POST', url:`${FLASK}/session/${phone}/data`, headers:{'Content-Type':'application/json'}, body:JSON.stringify(feedbackUpdate), returnFullResponse:false });\n}\n\nif (isDone) {\n  const rating  = parsed.rating  || existingData._feedback_rating  || 0;\n  const comment = parsed.comment || existingData._feedback_comment || '';\n\n  // Get latest order for ticket_no\n  let ticketNo = '';\n  try {\n    const orders = await this.helpers.httpRequest({ method:'GET', url:`${FLASK}/orders/${phone}`, returnFullResponse:false });\n    if (Array.isArray(orders) && orders.length > 0) ticketNo = orders[0].ticket_no || '';\n  } catch(e) {}\n\n  // Save feedback to DB\n  await this.helpers.httpRequest({ method:'POST', url:`${FLASK}/feedback`, headers:{'Content-Type':'application/json'},\n    body: JSON.stringify({ phone_number:phone, ticket_no:ticketNo, rating, comment }), returnFullResponse:false });\n\n  await setStep('done');\n}\n\nreturn [{ json: { ok: true } }];\n"
+      }
+    },
+    {
+      "id": "node-respondok",
+      "name": "Respond OK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        200,
+        500
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\"ok\":true}",
+        "options": {}
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Extract Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Message": {
+      "main": [
+        [
+          {
+            "node": "Is Reset",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Reset": {
+      "main": [
+        [
+          {
+            "node": "Delete Session",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get Session",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete Session": {
+      "main": [
+        [
+          {
+            "node": "Send Lang Menu",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Session": {
+      "main": [
+        [
+          {
+            "node": "Is New User",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is New User": {
+      "main": [
+        [
+          {
+            "node": "Create Session",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Master Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Session": {
+      "main": [
+        [
+          {
+            "node": "Master Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Master Switch": {
+      "main": [
+        [
+          {
+            "node": "Handle New",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Handle PDPA",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Handle Service",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Handle Template",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Collecting",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Handle Payment",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Feedback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Handle New": {
+      "main": [
+        [
+          {
+            "node": "Respond OK",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Handle PDPA": {
+      "main": [
+        [
+          {
+            "node": "Respond OK",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Handle Service": {
+      "main": [
+        [
+          {
+            "node": "Respond OK",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Handle Template": {
+      "main": [
+        [
+          {
+            "node": "Respond OK",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Collecting": {
+      "main": [
+        [
+          {
+            "node": "Respond OK",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Handle Payment": {
+      "main": [
+        [
+          {
+            "node": "Respond OK",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Feedback": {
+      "main": [
+        [
+          {
+            "node": "Respond OK",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Lang Menu": {
+      "main": [
+        [
+          {
+            "node": "Respond OK",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "resume-ai-v2",
+  "meta": {
+    "instanceId": "resume-ai"
+  },
+  "id": "resume-ai-v2",
+  "tags": []
+}

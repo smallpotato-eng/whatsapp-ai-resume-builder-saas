@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: Arial, 'Helvetica Neue', sans-serif; color:#333; background:#fff; width:794px; min-height:1123px; }
+
+:root {
+  --accent: {{ACCENT}};
+  --sidebar-bg: {{SIDEBAR_BG}};
+  --sidebar-text: {{SIDEBAR_TEXT}};
+}
+
+/* ===== LAYOUT A: SINGLE COLUMN ===== */
+.layout-A .page { padding: 52px 60px; }
+.layout-A .header { border-bottom: 3px solid var(--accent); padding-bottom: 18px; margin-bottom: 26px; }
+.layout-A .header h1 { font-size: 2rem; color: var(--accent); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+.layout-A .header .jobtitle { font-size: 0.95rem; color: #666; margin-top: 3px; }
+.layout-A .contact-row { display:flex; gap:20px; margin-top:10px; font-size:0.8rem; color:#555; flex-wrap:wrap; }
+.layout-A .section { margin-bottom: 22px; }
+.layout-A .section-title { font-size:0.7rem; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:var(--accent); border-bottom:1px solid var(--accent); padding-bottom:4px; margin-bottom:10px; }
+
+/* ===== LAYOUT B: TWO COLUMN ===== */
+.layout-B .page { display:flex; min-height:1123px; }
+.layout-B .sidebar { width:268px; background:var(--sidebar-bg); color:var(--sidebar-text); padding:36px 22px; flex-shrink:0; }
+.layout-B .sidebar h1 { font-size:1.5rem; font-weight:700; line-height:1.2; margin-bottom:3px; }
+.layout-B .sidebar .jobtitle { font-size:0.82rem; opacity:0.8; margin-bottom:22px; }
+.layout-B .sidebar .s-section { margin-bottom:20px; }
+.layout-B .sidebar .s-title { font-size:0.62rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; opacity:0.65; border-bottom:1px solid rgba(255,255,255,0.25); padding-bottom:4px; margin-bottom:8px; }
+.layout-B .sidebar p, .layout-B .sidebar li { font-size:0.78rem; line-height:1.55; opacity:0.9; }
+.layout-B .sidebar ul { padding-left:13px; }
+.layout-B .main { flex:1; padding:36px 30px; }
+.layout-B .section { margin-bottom:20px; }
+.layout-B .section-title { font-size:0.68rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--accent); border-bottom:2px solid var(--accent); padding-bottom:3px; margin-bottom:10px; }
+
+/* ===== SHARED ===== */
+.job-entry { margin-bottom:13px; }
+.job-header { display:flex; justify-content:space-between; align-items:baseline; }
+.job-title { font-weight:700; font-size:0.88rem; }
+.job-date { font-size:0.76rem; color:#999; }
+.job-company { font-size:0.8rem; color:#666; margin-bottom:4px; }
+.job-entry ul { padding-left:15px; }
+.job-entry li { font-size:0.8rem; line-height:1.6; color:#444; }
+.skills-wrap { display:flex; flex-wrap:wrap; gap:5px; }
+.skill-tag { border:1px solid var(--accent); color:var(--accent); padding:2px 9px; border-radius:3px; font-size:0.73rem; }
+
+/* ===== STYLE: MINIMAL ===== */
+.style-minimal .section-title { letter-spacing:3px; font-weight:400; }
+.style-minimal .skill-tag { border-radius:0; border-color:#ccc; color:#666; }
+.style-minimal .job-title { font-weight:400; }
+
+/* ===== STYLE: MODERN ===== */
+.style-modern .section-title { font-size:0.78rem; }
+.style-modern .job-title { font-size:0.92rem; }
+.style-modern .layout-A .header h1 { font-size:2.2rem; }
+
+/* ===== STYLE: BOLD ===== */
+.style-bold.layout-A .header { background:var(--accent); padding:28px 60px; margin:-52px -60px 26px; }
+.style-bold.layout-A .header h1 { color:#fff; font-size:2.4rem; }
+.style-bold.layout-A .header .jobtitle { color:rgba(255,255,255,0.8); }
+.style-bold.layout-A .contact-row { color:rgba(255,255,255,0.75); }
+.style-bold .section-title { font-size:0.78rem; letter-spacing:2px; }
+</style>
+</head>
+<body class="layout-{{LAYOUT}} style-{{STYLE_CLASS}}">
+<div class="page">
+
+{{LAYOUT_A_START}}
+  <div class="header">
+    <h1>JOHN SMITH</h1>
+    <div class="jobtitle">Senior Software Engineer</div>
+    <div class="contact-row">
+      <span>john@email.com</span><span>+60 12-345 6789</span>
+      <span>Kuala Lumpur, Malaysia</span><span>linkedin.com/in/johnsmith</span>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-title">Professional Summary</div>
+    <p style="font-size:0.83rem;line-height:1.7;color:#444">Results-driven software engineer with 5+ years experience building scalable web applications. Specialised in Python, React, and cloud infrastructure with a track record of delivering high-impact projects on time.</p>
+  </div>
+  <div class="section">
+    <div class="section-title">Work Experience</div>
+    <div class="job-entry">
+      <div class="job-header"><span class="job-title">Senior Software Engineer</span><span class="job-date">2022 – Present</span></div>
+      <div class="job-company">TechCorp Sdn Bhd · Kuala Lumpur</div>
+      <ul>
+        <li>Led microservices architecture serving 500K+ monthly users</li>
+        <li>Reduced API latency by 40% through Redis caching and query optimisation</li>
+        <li>Mentored 3 junior engineers through weekly code reviews</li>
+      </ul>
+    </div>
+    <div class="job-entry">
+      <div class="job-header"><span class="job-title">Software Engineer</span><span class="job-date">2019 – 2022</span></div>
+      <div class="job-company">StartupXYZ · Petaling Jaya</div>
+      <ul>
+        <li>Built React dashboard serving 10,000+ daily active users</li>
+        <li>Integrated payment gateway handling RM2M+ monthly transactions</li>
+      </ul>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-title">Education</div>
+    <div class="job-entry">
+      <div class="job-header"><span class="job-title">B.Sc. Computer Science</span><span class="job-date">2015 – 2019</span></div>
+      <div class="job-company">Universiti Malaya · CGPA 3.7/4.0</div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-title">Skills</div>
+    <div class="skills-wrap">
+      <span class="skill-tag">Python</span><span class="skill-tag">React</span><span class="skill-tag">Node.js</span>
+      <span class="skill-tag">AWS</span><span class="skill-tag">Docker</span><span class="skill-tag">PostgreSQL</span>
+      <span class="skill-tag">Git</span><span class="skill-tag">Agile</span>
+    </div>
+  </div>
+{{LAYOUT_A_END}}
+
+{{LAYOUT_B_START}}
+  <div class="sidebar">
+    <h1>JOHN<br>SMITH</h1>
+    <div class="jobtitle">Senior Software Engineer</div>
+    <div class="s-section"><div class="s-title">Contact</div>
+      <p>john@email.com</p><p>+60 12-345 6789</p><p>Kuala Lumpur</p><p>linkedin.com/in/johnsmith</p>
+    </div>
+    <div class="s-section"><div class="s-title">Skills</div>
+      <ul><li>Python</li><li>React</li><li>Node.js</li><li>AWS</li><li>Docker</li><li>PostgreSQL</li></ul>
+    </div>
+    <div class="s-section"><div class="s-title">Education</div>
+      <p style="font-weight:700;font-size:0.8rem">B.Sc. Computer Science</p>
+      <p>Universiti Malaya</p><p>2015–2019 · CGPA 3.7</p>
+    </div>
+    <div class="s-section"><div class="s-title">Languages</div>
+      <p>English (Fluent)</p><p>Malay (Native)</p><p>Mandarin (Conversational)</p>
+    </div>
+  </div>
+  <div class="main">
+    <div class="section">
+      <div class="section-title">Professional Summary</div>
+      <p style="font-size:0.82rem;line-height:1.7;color:#444">Results-driven software engineer with 5+ years building scalable web applications. Specialised in Python, React, and cloud infrastructure.</p>
+    </div>
+    <div class="section">
+      <div class="section-title">Work Experience</div>
+      <div class="job-entry">
+        <div class="job-header"><span class="job-title">Senior Software Engineer</span><span class="job-date">2022 – Present</span></div>
+        <div class="job-company">TechCorp Sdn Bhd · Kuala Lumpur</div>
+        <ul>
+          <li>Led microservices architecture serving 500K+ monthly users</li>
+          <li>Reduced API latency by 40% through caching optimisations</li>
+          <li>Mentored 3 junior engineers through weekly code reviews</li>
+        </ul>
+      </div>
+      <div class="job-entry">
+        <div class="job-header"><span class="job-title">Software Engineer</span><span class="job-date">2019 – 2022</span></div>
+        <div class="job-company">StartupXYZ · Petaling Jaya</div>
+        <ul>
+          <li>Built React dashboard for 10,000+ daily active users</li>
+          <li>Integrated payment gateway processing RM2M+ monthly</li>
+        </ul>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Achievements</div>
+      <ul style="padding-left:15px">
+        <li style="font-size:0.8rem;line-height:1.6;color:#444">Employee of the Year 2023 – TechCorp Sdn Bhd</li>
+        <li style="font-size:0.8rem;line-height:1.6;color:#444">AWS Certified Solutions Architect – Associate (2022)</li>
+      </ul>
+    </div>
+  </div>
+{{LAYOUT_B_END}}
+
+</div>
+</body>
+</html>

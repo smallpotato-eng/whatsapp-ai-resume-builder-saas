@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Georgia', 'Times New Roman', serif; font-size:11px; color:#1c1c1c; background:#fff; width:794px; min-height:1123px; }
+  .top-bar { height:6px; background:linear-gradient(90deg, #2c3e50, #8e9eab); }
+  .header { padding:36px 52px 28px; border-bottom:1px solid #ddd; display:flex; justify-content:space-between; align-items:flex-end; }
+  .header-left h1 { font-size:26px; font-weight:normal; color:#1a1a1a; letter-spacing:2px; margin-bottom:4px; }
+  .header-left h2 { font-size:12px; color:#666; font-weight:normal; letter-spacing:1px; font-style:italic; }
+  .header-right { text-align:right; }
+  .contact-item { font-size:10px; color:#666; margin-bottom:3px; }
+  .body { padding:28px 52px; display:grid; grid-template-columns:1fr 240px; gap:40px; }
+  .section { margin-bottom:24px; }
+  .section-title { font-size:10px; letter-spacing:3px; text-transform:uppercase; color:#2c3e50; margin-bottom:12px; padding-bottom:5px; border-bottom:1px solid #2c3e50; }
+  .summary { font-size:11.5px; line-height:1.8; color:#444; font-style:italic; }
+  .job { margin-bottom:16px; }
+  .job-title { font-size:12.5px; font-weight:bold; color:#1a1a1a; }
+  .job-company { font-size:11px; color:#2c3e50; margin-bottom:2px; }
+  .job-date { font-size:10px; color:#999; margin-bottom:5px; }
+  .job ul { padding-left:16px; list-style:none; }
+  .job ul li { margin-bottom:4px; line-height:1.6; color:#444; font-size:10.5px; }
+  .job ul li::before { content:'▸ '; color:#2c3e50; }
+  .sidebar-section { margin-bottom:22px; }
+  .s-title { font-size:10px; letter-spacing:2px; text-transform:uppercase; color:#2c3e50; border-bottom:1px solid #ddd; padding-bottom:4px; margin-bottom:10px; }
+  .edu-item { margin-bottom:10px; }
+  .edu-degree { font-size:11.5px; font-weight:bold; color:#1a1a1a; }
+  .edu-detail { font-size:10px; color:#888; line-height:1.6; }
+  .competency { display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
+  .comp-name { font-size:10.5px; color:#444; }
+  .comp-dots { display:flex; gap:3px; }
+  .dot { width:7px; height:7px; border-radius:50%; }
+  .dot-fill { background:#2c3e50; }
+  .dot-empty { background:#ddd; }
+  .board-item { font-size:10.5px; color:#444; margin-bottom:5px; padding-left:8px; border-left:2px solid #2c3e50; line-height:1.5; }
+</style>
+</head>
+<body>
+  <div class="top-bar"></div>
+  <div class="header">
+    <div class="header-left">
+      <h1>Dato' Ir. Hassan bin Mohamed</h1>
+      <h2>Chief Executive Officer | Engineering & Infrastructure</h2>
+    </div>
+    <div class="header-right">
+      <div class="contact-item">hassan.ceo@email.com</div>
+      <div class="contact-item">+60 12-888 9999</div>
+      <div class="contact-item">Kuala Lumpur, Malaysia</div>
+    </div>
+  </div>
+  <div class="body">
+    <div>
+      <div class="section">
+        <div class="section-title">Executive Profile</div>
+        <div class="summary">Visionary engineering executive with 25 years of leadership in infrastructure development and corporate governance. Proven expertise in P&L management, strategic partnerships, and building high-performance organisations across ASEAN markets.</div>
+      </div>
+      <div class="section">
+        <div class="section-title">Career History</div>
+        <div class="job">
+          <div class="job-title">Chief Executive Officer</div>
+          <div class="job-company">Gamuda Berhad</div>
+          <div class="job-date">2018 – Present</div>
+          <ul>
+            <li>Steered company through RM12B infrastructure portfolio across Malaysia and Vietnam</li>
+            <li>Delivered 18% CAGR in revenue over 5-year tenure</li>
+            <li>Negotiated landmark PPP agreement with Ministry of Works worth RM3.2B</li>
+            <li>Transformed workforce of 12,000 with digital upskilling programme</li>
+          </ul>
+        </div>
+        <div class="job">
+          <div class="job-title">Group Managing Director</div>
+          <div class="job-company">IJM Corporation Berhad</div>
+          <div class="job-date">2011 – 2018</div>
+          <ul>
+            <li>Grew group revenue from RM3.8B to RM7.1B over tenure</li>
+            <li>Led strategic diversification into property and industries divisions</li>
+          </ul>
+        </div>
+        <div class="job">
+          <div class="job-title">Director of Engineering</div>
+          <div class="job-company">Petronas</div>
+          <div class="job-date">2003 – 2011</div>
+          <ul>
+            <li>Oversaw RM2B annual capital expenditure for upstream projects</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="sidebar-section">
+        <div class="s-title">Education</div>
+        <div class="edu-item">
+          <div class="edu-degree">PhD Civil Engineering</div>
+          <div class="edu-detail">Imperial College London<br>1995 – 1999</div>
+        </div>
+        <div class="edu-item">
+          <div class="edu-degree">B.Eng. (Hons) Civil</div>
+          <div class="edu-detail">Universiti Malaya<br>1988 – 1992 | First Class</div>
+        </div>
+      </div>
+      <div class="sidebar-section">
+        <div class="s-title">Core Competencies</div>
+        <div class="competency"><span class="comp-name">Strategic Leadership</span><div class="comp-dots"><div class="dot dot-fill"></div><div class="dot dot-fill"></div><div class="dot dot-fill"></div><div class="dot dot-fill"></div><div class="dot dot-fill"></div></div></div>
+        <div class="competency"><span class="comp-name">P&L Management</span><div class="comp-dots"><div class="dot dot-fill"></div><div class="dot dot-fill"></div><div class="dot dot-fill"></div><div class="dot dot-fill"></div><div class="dot dot-fill"></div></div></div>
+        <div class="competency"><span class="comp-name">M&A / Deal Structuring</span><div class="comp-dots"><div class="dot dot-fill"></div><div class="dot dot-fill"></div><div class="dot dot-fill"></div><div class="dot dot-fill"></div><div class="dot dot-empty"></div></div></div>
+        <div class="competency"><span class="comp-name">Stakeholder Management</span><div class="comp-dots"><div class="dot dot-fill"></div><div class="dot dot-fill"></div><div class="dot dot-fill"></div><div class="dot dot-fill"></div><div class="dot dot-fill"></div></div></div>
+      </div>
+      <div class="sidebar-section">
+        <div class="s-title">Board Positions</div>
+        <div class="board-item">Board Member, CIDB Malaysia (2020–Present)</div>
+        <div class="board-item">Advisory Council, PEMANDU Associates</div>
+        <div class="board-item">Council Member, Institution of Engineers Malaysia</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

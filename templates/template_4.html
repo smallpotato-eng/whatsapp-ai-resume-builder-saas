@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Arial', sans-serif; font-size:11px; color:#222; background:#fff; width:794px; min-height:1123px; }
+  .header { background:linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); color:#fff; padding:40px 48px 32px; position:relative; overflow:hidden; }
+  .header::after { content:''; position:absolute; bottom:-20px; right:-20px; width:120px; height:120px; background:rgba(255,255,255,0.1); border-radius:50%; }
+  .header::before { content:''; position:absolute; top:-30px; right:80px; width:80px; height:80px; background:rgba(255,255,255,0.08); border-radius:50%; }
+  .header h1 { font-size:30px; font-weight:900; letter-spacing:1px; margin-bottom:4px; }
+  .header h2 { font-size:13px; font-weight:400; opacity:0.85; margin-bottom:20px; letter-spacing:1px; }
+  .contact-row { display:flex; gap:20px; font-size:10px; opacity:0.9; flex-wrap:wrap; }
+  .contact-row span { background:rgba(255,255,255,0.15); padding:4px 10px; border-radius:12px; }
+  .body { padding:32px 48px; }
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:32px; }
+  .section { margin-bottom:24px; }
+  .section-title { font-size:12px; font-weight:900; color:#e74c3c; text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; padding-bottom:6px; border-bottom:3px solid #e74c3c; display:inline-block; }
+  .summary { font-size:11px; line-height:1.7; color:#444; }
+  .job { margin-bottom:14px; padding-left:12px; border-left:3px solid #ffd5d0; }
+  .job-title { font-weight:bold; font-size:12px; color:#222; }
+  .job-meta { font-size:10px; color:#e74c3c; margin-bottom:4px; }
+  .job ul { padding-left:14px; }
+  .job ul li { margin-bottom:3px; line-height:1.5; color:#444; font-size:10.5px; }
+  .edu-item { padding-left:12px; border-left:3px solid #ffd5d0; margin-bottom:10px; }
+  .edu-degree { font-weight:bold; font-size:12px; }
+  .edu-detail { font-size:10px; color:#777; }
+  .skill-pill { display:inline-block; background:#fff5f5; color:#c0392b; padding:4px 12px; border-radius:14px; font-size:10px; margin:3px 3px 3px 0; border:1px solid #ffd5d0; font-weight:600; }
+  .achievement { display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+  .ach-num { background:#e74c3c; color:#fff; font-size:14px; font-weight:900; width:36px; height:36px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .ach-text { font-size:11px; color:#444; line-height:1.5; padding-top:8px; }
+</style>
+</head>
+<body>
+  <div class="header">
+    <h1>Nurul Farhana binti Zulkifli</h1>
+    <h2>Sales Director | Business Development</h2>
+    <div class="contact-row">
+      <span>📧 farhana@email.com</span>
+      <span>📱 +60 13-456 7890</span>
+      <span>📍 Johor Bahru</span>
+    </div>
+  </div>
+  <div class="body">
+    <div class="section">
+      <div class="section-title">About</div>
+      <div class="summary">High-performing Sales Director with 10 years of experience exceeding revenue targets in competitive B2B markets. Known for building high-achieving sales teams and forging strategic partnerships that deliver exponential growth.</div>
+    </div>
+    <div class="two-col">
+      <div>
+        <div class="section">
+          <div class="section-title">Experience</div>
+          <div class="job">
+            <div class="job-title">Sales Director</div>
+            <div class="job-meta">Sunway Group | 2019 – Present</div>
+            <ul>
+              <li>Exceeded annual revenue target by 135% in FY2023 (RM42M)</li>
+              <li>Built and managed 20-person sales team across 4 regions</li>
+              <li>Secured 15 enterprise accounts worth RM18M total contract value</li>
+            </ul>
+          </div>
+          <div class="job">
+            <div class="job-title">Regional Sales Manager</div>
+            <div class="job-meta">Maxis Business | 2015 – 2019</div>
+            <ul>
+              <li>Ranked #1 regional manager nationally for 3 consecutive years</li>
+              <li>Grew Southern region revenue by 78% over 4 years</li>
+            </ul>
+          </div>
+        </div>
+        <div class="section">
+          <div class="section-title">Education</div>
+          <div class="edu-item">
+            <div class="edu-degree">MBA, Marketing & Strategy</div>
+            <div class="edu-detail">Universiti Kebangsaan Malaysia | 2014</div>
+          </div>
+          <div class="edu-item">
+            <div class="edu-degree">B.Bus. (Hons) Marketing</div>
+            <div class="edu-detail">UTM Johor | 2012 | CGPA 3.71</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="section">
+          <div class="section-title">Key Achievements</div>
+          <div class="achievement"><div class="ach-num">1</div><div class="ach-text">Top Salesperson Award — Sunway Group 2022 & 2023</div></div>
+          <div class="achievement"><div class="ach-num">2</div><div class="ach-text">Closed RM8M single deal — largest in company history</div></div>
+          <div class="achievement"><div class="ach-num">3</div><div class="ach-text">Built sales training programme adopted company-wide</div></div>
+        </div>
+        <div class="section">
+          <div class="section-title">Skills</div>
+          <div>
+            <span class="skill-pill">B2B Sales</span>
+            <span class="skill-pill">CRM / Salesforce</span>
+            <span class="skill-pill">Negotiation</span>
+            <span class="skill-pill">Team Leadership</span>
+            <span class="skill-pill">Revenue Growth</span>
+            <span class="skill-pill">Pipeline Management</span>
+            <span class="skill-pill">Client Relations</span>
+            <span class="skill-pill">Forecasting</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

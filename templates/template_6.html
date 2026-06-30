@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Arial', sans-serif; font-size:11px; color:#333; background:#fff; width:794px; min-height:1123px; }
+  .header { background:#2ecc71; padding:36px 48px 28px; color:#fff; }
+  .header-top { display:flex; justify-content:space-between; align-items:flex-start; }
+  .header h1 { font-size:26px; font-weight:900; margin-bottom:3px; }
+  .header h2 { font-size:12px; font-weight:400; opacity:0.9; margin-bottom:16px; }
+  .contact-chips { display:flex; flex-wrap:wrap; gap:8px; }
+  .chip { background:rgba(255,255,255,0.2); padding:4px 12px; border-radius:20px; font-size:10px; }
+  .gpa-badge { background:#fff; color:#2ecc71; padding:12px 16px; border-radius:12px; text-align:center; font-weight:bold; min-width:70px; }
+  .gpa-num { font-size:20px; display:block; }
+  .gpa-label { font-size:9px; display:block; margin-top:2px; }
+  .body { padding:28px 48px; display:grid; grid-template-columns:1fr 200px; gap:32px; }
+  .section { margin-bottom:22px; }
+  .section-title { font-size:11px; font-weight:900; color:#2ecc71; text-transform:uppercase; letter-spacing:1px; margin-bottom:10px; display:flex; align-items:center; gap:8px; }
+  .section-title::after { content:''; flex:1; height:2px; background:#e8f8f0; }
+  .summary { font-size:11px; line-height:1.7; color:#555; }
+  .edu-main { background:#f0faf5; border-radius:8px; padding:14px 16px; margin-bottom:8px; border-left:4px solid #2ecc71; }
+  .edu-degree { font-weight:bold; font-size:12px; color:#1a1a1a; }
+  .edu-school { font-size:11px; color:#2ecc71; margin:2px 0; }
+  .edu-detail { font-size:10px; color:#888; }
+  .internship { margin-bottom:12px; }
+  .int-title { font-weight:bold; font-size:11.5px; color:#1a1a1a; }
+  .int-meta { font-size:10px; color:#888; margin-bottom:4px; }
+  .int-desc { font-size:10.5px; color:#555; line-height:1.5; }
+  .project { background:#f9f9f9; border-radius:6px; padding:10px 12px; margin-bottom:8px; }
+  .proj-title { font-weight:bold; font-size:11px; color:#1a1a1a; margin-bottom:2px; }
+  .proj-desc { font-size:10px; color:#666; line-height:1.5; }
+  .proj-tech { font-size:9px; color:#2ecc71; margin-top:4px; font-weight:bold; }
+  .skill-cat { margin-bottom:12px; }
+  .skill-cat-title { font-size:10px; font-weight:bold; color:#555; margin-bottom:5px; }
+  .skill-pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .pill { background:#e8f8f0; color:#27ae60; padding:3px 9px; border-radius:10px; font-size:9.5px; font-weight:600; }
+  .act-item { font-size:10.5px; color:#555; margin-bottom:5px; padding-left:10px; position:relative; line-height:1.5; }
+  .act-item::before { content:'•'; color:#2ecc71; position:absolute; left:0; font-weight:bold; }
+</style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-top">
+      <div>
+        <h1>Chong Wei Xin</h1>
+        <h2>Fresh Graduate | Business Administration</h2>
+        <div class="contact-chips">
+          <span class="chip">📧 weixin@gmail.com</span>
+          <span class="chip">📱 +60 17-234 5678</span>
+          <span class="chip">📍 Subang Jaya</span>
+        </div>
+      </div>
+      <div class="gpa-badge">
+        <span class="gpa-num">3.78</span>
+        <span class="gpa-label">CGPA</span>
+      </div>
+    </div>
+  </div>
+  <div class="body">
+    <div>
+      <div class="section">
+        <div class="section-title">About Me</div>
+        <div class="summary">Motivated Business Administration graduate with strong analytical and communication skills. Actively involved in university leadership roles and completed internship at top consulting firm. Eager to contribute fresh perspectives in a dynamic work environment.</div>
+      </div>
+      <div class="section">
+        <div class="section-title">Education</div>
+        <div class="edu-main">
+          <div class="edu-degree">Bachelor of Business Administration (Hons)</div>
+          <div class="edu-school">Sunway University</div>
+          <div class="edu-detail">2020 – 2024 | CGPA 3.78 / 4.00 | Dean's List (4 semesters)</div>
+        </div>
+        <div class="edu-detail" style="font-size:10.5px;color:#666;padding-left:4px">SPM 2019 — 9A | SMK Subang Utama</div>
+      </div>
+      <div class="section">
+        <div class="section-title">Internship Experience</div>
+        <div class="internship">
+          <div class="int-title">Business Analyst Intern</div>
+          <div class="int-meta">KPMG Malaysia | Jan – Jun 2024 (6 months)</div>
+          <div class="int-desc">Assisted in financial modelling and client report preparation. Analysed market entry data for 3 SME clients. Received "Outstanding Intern" recognition from supervisor.</div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-title">Final Year Projects</div>
+        <div class="project">
+          <div class="proj-title">E-Commerce Market Analysis — Malaysia vs Singapore</div>
+          <div class="proj-desc">Comparative study of consumer behaviour across 400 respondents. Presented findings to panel of 5 industry judges.</div>
+          <div class="proj-tech">Tools: SPSS, Excel, Tableau</div>
+        </div>
+        <div class="project">
+          <div class="proj-title">Business Plan — Sustainable F&B Startup</div>
+          <div class="proj-desc">Developed full business plan; won 2nd place in Sunway Entrepreneurship Competition 2024.</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="skill-cat">
+        <div class="skill-cat-title">Technical</div>
+        <div class="skill-pills">
+          <span class="pill">Microsoft Excel</span>
+          <span class="pill">PowerPoint</span>
+          <span class="pill">Tableau</span>
+          <span class="pill">Canva</span>
+          <span class="pill">SPSS</span>
+        </div>
+      </div>
+      <div class="skill-cat">
+        <div class="skill-cat-title">Soft Skills</div>
+        <div class="skill-pills">
+          <span class="pill">Communication</span>
+          <span class="pill">Teamwork</span>
+          <span class="pill">Problem Solving</span>
+          <span class="pill">Adaptability</span>
+        </div>
+      </div>
+      <div class="skill-cat">
+        <div class="skill-cat-title">Languages</div>
+        <div class="skill-pills">
+          <span class="pill">English</span>
+          <span class="pill">Mandarin</span>
+          <span class="pill">Bahasa Malaysia</span>
+        </div>
+      </div>
+      <div class="section" style="margin-top:16px">
+        <div class="section-title">Activities</div>
+        <div class="act-item">President, Sunway Business Club (2023)</div>
+        <div class="act-item">Volunteer, Teach For Malaysia</div>
+        <div class="act-item">Finalist, Maybank GO Ahead Challenge 2023</div>
+        <div class="act-item">Sunway Half Marathon (2022, 2023)</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
