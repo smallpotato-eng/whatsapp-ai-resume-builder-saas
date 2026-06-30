@@ -1,3 +1,22 @@
+# Whatsapp Ai Resume Builder Saas
+
+WhatsApp AI resume-builder micro-SaaS with multilingual onboarding, PDPA consent, template previews, order tickets, payment proof handling, and AI-assisted resume data collection.
+
+## What This Demonstrates
+
+- LLM application development
+- Prompt/workflow orchestration
+- Messaging platform integration
+- Flask API design
+- SQLite persistence
+- n8n automation workflows
+- Production-style separation of secrets through environment variables
+
+## Security Notice
+
+This repository is a sanitized portfolio version. Real API keys, bot tokens, payment details, databases, chat logs, sessions, uploaded files, and generated customer documents are intentionally excluded.
+
+Copy `.env.example` to `.env` and fill in your own local credentials before running.
 # WhatsApp AI Resume Builder Micro-SaaS
 
 A WhatsApp-based AI resume service workflow with multilingual onboarding, PDPA consent, service selection, template previews, AI-assisted resume data collection, order ticketing, payment proof handling, and feedback collection.
@@ -32,57 +51,71 @@ flowchart LR
     H --> I["Telegram Admin Alert"]
     C --> B
     B --> J["User Receives Reply, Preview, or Instructions"]
-    
-What I Built
-WhatsApp integration using Baileys and Express.js
-n8n state-machine workflow for multi-step service flow
-Flask API for sessions, conversations, orders, feedback, and template previews
-SQLite database for persistent user sessions and order records
-Multilingual onboarding flow
-PDPA consent handling before collecting personal information
-Resume service selection and pricing flow
-Template preview selection
-AI-assisted resume information extraction
-Order ticket generation
-Payment proof detection
-Telegram admin notification
-Feedback collection after payment
-Key Features
-Multilingual support: Bahasa Malaysia, English, and Chinese
-Structured onboarding instead of open-ended chat
-PDPA consent step for privacy-aware data collection
-Service menu with pricing
-Resume layout and template preview flow
-Persistent session state
-AI extraction of resume fields
-Order number generation using RES-YYYYMMDD-XXXX
-Payment proof handling
-Admin notification workflow
-Feedback collection
-Tech Stack
-Python
-Flask
-SQLite
-JavaScript / Node.js
-Express.js
-Baileys WhatsApp API
-n8n
-Gemini API
-Groq LLM API
-Telegram Bot API
-HTML resume templates
-Why This Project Matters
+```
+
+## What I Built
+
+- WhatsApp integration using Baileys and Express.js
+- n8n state-machine workflow for multi-step service flow
+- Flask API for sessions, conversations, orders, feedback, and template previews
+- SQLite database for persistent user sessions and order records
+- Multilingual onboarding flow
+- PDPA consent handling before collecting personal information
+- Resume service selection and pricing flow
+- Template preview selection
+- AI-assisted resume information extraction
+- Order ticket generation
+- Payment proof detection
+- Telegram admin notification
+- Feedback collection after payment
+
+## Key Features
+
+- Multilingual support: Bahasa Malaysia, English, and Chinese
+- Structured onboarding instead of open-ended chat
+- PDPA consent step for privacy-aware data collection
+- Service menu with pricing
+- Resume layout and template preview flow
+- Persistent session state
+- AI extraction of resume fields
+- Order number generation using `RES-YYYYMMDD-XXXX`
+- Payment proof handling
+- Admin notification workflow
+- Feedback collection
+
+## Tech Stack
+
+- Python
+- Flask
+- SQLite
+- JavaScript / Node.js
+- Express.js
+- Baileys WhatsApp API
+- n8n
+- Gemini API
+- Groq LLM API
+- Telegram Bot API
+- HTML resume templates
+
+## Why This Project Matters
+
 Most chatbot demos stop at answering questions. This project shows how an AI assistant can support a real paid service workflow: onboarding, consent, product selection, information collection, order creation, payment handling, admin notification, and feedback.
+
 It demonstrates practical LLM workflow design for service automation, customer operations, and micro-SaaS product prototyping.
-Security Notice
+
+## Security Notice
+
 This repository is a sanitized portfolio version.
+
 The following are intentionally excluded:
-Real API keys
-WhatsApp sessions
-Telegram bot tokens
-Customer databases
-Uploaded resumes or documents
-Payment screenshots
-Real payment account details
-Private chat logs
-Use .env.example to configure your own local credentials.
+
+- Real API keys
+- WhatsApp sessions
+- Telegram bot tokens
+- Customer databases
+- Uploaded resumes or documents
+- Payment screenshots
+- Real payment account details
+- Private chat logs
+
+Use `.env.example` to configure your own local credentials.
